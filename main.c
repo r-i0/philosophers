@@ -45,10 +45,11 @@ bool	init_info(char **argv, t_info *info)
 
 void	put_act(t_philo *philo, char *msg)
 {
-	ft_putnbr_fd(philo->nb, STDOUT_FILENO);
-	ft_putstr_fd(" ", STDOUT_FILENO);
-	ft_putstr_fd(msg, STDOUT_FILENO);
-	ft_putstr_fd("\n", STDOUT_FILENO);
+	printf("%d %s\n", philo->nb, msg);
+	// ft_putnbr_fd(philo->nb, STDOUT_FILENO);
+	// ft_putstr_fd(" ", STDOUT_FILENO);
+	// ft_putstr_fd(msg, STDOUT_FILENO);
+	// ft_putstr_fd("\n", STDOUT_FILENO);
 }
 
 void	philo_eat(t_philo *philo)
@@ -58,7 +59,7 @@ void	philo_eat(t_philo *philo)
 	pthread_mutex_lock(&(philo->info->fork[philo->right_fork]));
 	put_act(philo, "is taken a fork");
 	put_act(philo, "is eating");
-	sleep(1);
+	usleep(philo->info->time_eat * 10);
 	pthread_mutex_unlock(&(philo->info->fork[philo->left_fork]));
 	pthread_mutex_unlock(&(philo->info->fork[philo->right_fork]));
 }
@@ -69,12 +70,15 @@ void	*func(void	*philo)
 	if (((t_philo*)philo)->nb % 2)
 	{
 		printf("sleep\n");
-		sleep(1);
+		usleep(50);
 	}
 	while (1)
 	{
 		philo_eat(philo);
+		usleep(((t_philo*)philo)->info->time_sleep * 10);
+		printf("%d sleeping\n", ((t_philo*)philo)->nb);
 		sleep(1);
+		printf("%d thinking\n", ((t_philo*)philo)->nb);
 	}
 	return (NULL);
 }
@@ -106,5 +110,11 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	start_dining(&info);
+	int	i = 0;
+	while (i < info.nb_philo)
+	{
+		pthread_join(info.philo[i].thread, NULL);
+		i++;
+	}
 	return (0);
 }
