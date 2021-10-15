@@ -1,12 +1,11 @@
 #include "philo.h"
 
-void	print_help(void)
+int	get_ms_timestamp(void)
 {
-	printf("Usage:\n./philo number_of_philosophers \n\
-	time_to_die \n\
-	time_to_eat \n\
-	time_to_sleep \n\
-	[number_of_times_each_philosopher_must_eat]\n");
+	struct timeval tv;
+
+	gettimeofday(&tv, NULL);//
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
 void	init_philo(t_info *info)
@@ -45,7 +44,7 @@ bool	init_info(char **argv, t_info *info)
 
 void	put_act(t_philo *philo, char *msg)
 {
-	printf("%d %s\n", philo->nb, msg);
+	printf("%d %d %s\n", get_ms_timestamp(), philo->nb, msg);
 	// ft_putnbr_fd(philo->nb, STDOUT_FILENO);
 	// ft_putstr_fd(" ", STDOUT_FILENO);
 	// ft_putstr_fd(msg, STDOUT_FILENO);
@@ -59,7 +58,7 @@ void	philo_eat(t_philo *philo)
 	pthread_mutex_lock(&(philo->info->fork[philo->right_fork]));
 	put_act(philo, "is taken a fork");
 	put_act(philo, "is eating");
-	usleep(philo->info->time_eat * 10);
+	usleep(philo->info->time_eat * 1000);
 	pthread_mutex_unlock(&(philo->info->fork[philo->left_fork]));
 	pthread_mutex_unlock(&(philo->info->fork[philo->right_fork]));
 }
@@ -67,18 +66,17 @@ void	philo_eat(t_philo *philo)
 void	*func(void	*philo)
 {
 	printf("func start\n");
-	if (((t_philo*)philo)->nb % 2)
-	{
-		printf("sleep\n");
-		usleep(50);
-	}
+	// if (((t_philo*)philo)->nb % 2)
+	// {
+	// 	printf("sleep\n");
+	// 	usleep(50);
+	// }
 	while (1)
 	{
 		philo_eat(philo);
-		usleep(((t_philo*)philo)->info->time_sleep * 10);
-		printf("%d sleeping\n", ((t_philo*)philo)->nb);
-		sleep(1);
-		printf("%d thinking\n", ((t_philo*)philo)->nb);
+		put_act(philo, "is sleeping");
+		usleep(((t_philo*)philo)->info->time_sleep * 1000);
+		put_act(philo, "is thinking");
 	}
 	return (NULL);
 }
@@ -101,7 +99,7 @@ int	main(int argc, char **argv)
 
 	if (argc < 5 || argc > 6)
 	{
-		print_help();
+		ft_putstr_fd("invalid argument\n", STDERR_FILENO);
 		return (1);
 	}
 	if (init_info(argv, &info))
