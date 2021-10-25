@@ -18,13 +18,14 @@ typedef struct s_philo
 	int			left_fork;
 	int			right_fork;
 	pthread_t	thread;
+	unsigned long	time_last_eat;
 	struct s_info	*info;
 }	t_philo;
 
 typedef struct s_info
 {
 	int				nb_philo;
-	int				time_die;
+	unsigned long	time_die;
 	int				time_eat;
 	int				time_sleep;
 	int				time_must_eat;
@@ -35,5 +36,8 @@ typedef struct s_info
 int		ft_atoi(const char *str, bool *err);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
+
+bool	philo_init(char **argv, t_info *info);
+unsigned long	get_ms_timestamp(void);
 
 #endif
