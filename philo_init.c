@@ -32,6 +32,7 @@ static bool	init_info(char **argv, t_info *info)
 		info->time_must_eat = ft_atoi(argv[5], &err);
 	info->philo = malloc(sizeof(t_philo) * (info->nb_philo + 1));
 	info->fork = malloc(sizeof(pthread_mutex_t) * (info->nb_philo + 1));
+	info->end_flag = false;
 	return (err);
 }
 

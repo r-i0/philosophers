@@ -14,6 +14,8 @@ unsigned long	put_act(t_philo *philo, char *msg)
 {
 	unsigned long	timestamp;
 
+	if (philo->info->end_flag == true)
+		return (0);
 	timestamp = get_ms_timestamp();
 	printf("%lu %d %s\n", timestamp, philo->nb, msg);
 	return (timestamp);
@@ -22,9 +24,9 @@ unsigned long	put_act(t_philo *philo, char *msg)
 void	philo_eat(t_philo *philo)
 {
 	pthread_mutex_lock(&(philo->info->fork[philo->left_fork]));
-	put_act(philo, "is taken a fork");
+	put_act(philo, "has taken a fork");
 	pthread_mutex_lock(&(philo->info->fork[philo->right_fork]));
-	put_act(philo, "is taken a fork");
+	put_act(philo, "has taken a fork");
 	philo->time_last_eat = put_act(philo, "is eating");
 	usleep(philo->info->time_eat * 1000);
 	pthread_mutex_unlock(&(philo->info->fork[philo->left_fork]));
@@ -44,13 +46,17 @@ void	philo_think(t_philo *philo)
 
 void	*philo_routine(void *philo)
 {
+	t_info	*info;
+
+	info = ((t_philo*)philo)->info;
 	if (((t_philo*)philo)->nb % 2)
 	{
-		printf("sleep\n");
-		usleep(50);
+		usleep(100);
 	}
 	while (1)
 	{
+		if (info->end_flag == true)
+			break ;
 		philo_eat(philo);
 		philo_sleep(philo);
 		philo_think(philo);
@@ -58,28 +64,27 @@ void	*philo_routine(void *philo)
 	return (NULL);
 }
 
+void	philo_die(t_philo *philo)
+{
+	put_act(philo, "died");
+}
+
 void	*observe_philo_dead(void *philo_ptr)
 {
-	t_philo *philo;
+	t_philo	*philo;
+	t_info	*info;
 
 	philo = philo_ptr;
-	int	i;
-
-	i = 0;
-	while (1)
+	info = philo->info;
+	while (philo->info->end_flag == false)
 	{
 		if (get_ms_timestamp() - philo->time_last_eat > philo->info->time_die)
 		{
-			printf("nb: %d\n", philo->nb);
-			printf("time not eat :%lu\n", get_ms_timestamp() - philo->time_last_eat);
-			printf("time to die  :%lu\n", philo->info->time_die);
-			printf("exit\n");
-			exit(0);
+			philo_die(philo);
+			info->end_flag = true;
 		}
-		i++;
-		if (i > philo->info->nb_philo)
-			i = 0;
 	}
+	return (NULL);
 }
 
 void	start_dining(t_info *info)
@@ -90,6 +95,7 @@ void	start_dining(t_info *info)
 	while (i < info->nb_philo)
 	{
 		pthread_create(&(info->philo[i].thread), NULL, philo_routine, &info->philo[i]);
+		pthread_create(&(info->philo[i].death_thread), NULL, observe_philo_dead, &info->philo[i]);
 		i++;
 	}
 }
@@ -113,6 +119,7 @@ int	main(int argc, char **argv)
 	while (i < info.nb_philo)
 	{
 		pthread_join(info.philo[i].thread, NULL);
+		pthread_join(info.philo[i].death_thread, NULL);
 		i++;
 	}
 	return (0);
