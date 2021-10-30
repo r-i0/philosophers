@@ -31,6 +31,17 @@ void	philo_eat(t_philo *philo)
 	pthread_mutex_unlock(&(philo->info->fork[philo->right_fork]));
 }
 
+void	philo_sleep(t_philo *philo)
+{
+	put_act(philo, "is sleeping");
+	usleep(((t_philo*)philo)->info->time_sleep * 1000);
+}
+
+void	philo_think(t_philo *philo)
+{
+	put_act(philo, "is thinking");
+}
+
 void	*philo_routine(void *philo)
 {
 	if (((t_philo*)philo)->nb % 2)
@@ -41,9 +52,8 @@ void	*philo_routine(void *philo)
 	while (1)
 	{
 		philo_eat(philo);
-		put_act(philo, "is sleeping");
-		usleep(((t_philo*)philo)->info->time_sleep * 1000);
-		put_act(philo, "is thinking");
+		philo_sleep(philo);
+		philo_think(philo);
 	}
 	return (NULL);
 }
