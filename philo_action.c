@@ -6,8 +6,10 @@ unsigned long	put_act(t_philo *philo, char *msg)
 
 	if (philo->info->end_flag == true)
 		return (0);
+	pthread_mutex_lock(&(philo->info->put));
 	timestamp = get_ms_timestamp();
 	printf("%lu %d %s\n", timestamp, philo->nb, msg);
+	pthread_mutex_unlock(&(philo->info->put));
 	return (timestamp);
 }
 

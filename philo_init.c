@@ -2,8 +2,8 @@
 
 static void	init_philo(t_info *info)
 {
-	int	i;
-	const unsigned long start_time = get_ms_timestamp();
+	int					i;
+	const unsigned long	start_time = get_ms_timestamp();
 
 	i = 0;
 	while (i < info->nb_philo)
@@ -24,6 +24,7 @@ static bool	init_info(char **argv, t_info *info)
 
 	err = false;
 	info->time_must_eat = -1;
+	info->end_flag = false;
 	info->nb_philo = ft_atoi(argv[1], &err);
 	info->time_die = (unsigned long)ft_atoi(argv[2], &err);
 	info->time_eat = ft_atoi(argv[3], &err);
@@ -32,7 +33,8 @@ static bool	init_info(char **argv, t_info *info)
 		info->time_must_eat = ft_atoi(argv[5], &err);
 	info->philo = malloc(sizeof(t_philo) * (info->nb_philo + 1));
 	info->fork = malloc(sizeof(pthread_mutex_t) * (info->nb_philo + 1));
-	info->end_flag = false;
+	if (info->philo == NULL || info->fork == NULL)
+		err = true;
 	return (err);
 }
 

@@ -30,25 +30,25 @@ void	*philo_routine(void *philo)
 	return (NULL);
 }
 
-void	*observe_philo_dead(void *philo_ptr)
-{
-	t_philo	*philo;
-	t_info	*info;
+/* void	*observe_philo_dead(void *philo_ptr) */
+/* { */
+/* 	t_philo	*philo; */
+/* 	t_info	*info; */
 
-	philo = philo_ptr;
-	info = philo->info;
-	while (info->end_flag == false)
-	{
-		pthread_mutex_lock(&(info->death_check));
-		if (get_ms_timestamp() - philo->time_last_eat > info->time_die)
-		{
-			philo_die(philo);
-			info->end_flag = true;
-		}
-		pthread_mutex_unlock(&(info->death_check));
-	}
-	return (NULL);
-}
+/* 	philo = philo_ptr; */
+/* 	info = philo->info; */
+/* 	while (info->end_flag == false) */
+/* 	{ */
+/* 		pthread_mutex_lock(&(info->death_check)); */
+/* 		if (get_ms_timestamp() - philo->time_last_eat > info->time_die) */
+/* 		{ */
+/* 			philo_die(philo); */
+/* 			info->end_flag = true; */
+/* 		} */
+/* 		pthread_mutex_unlock(&(info->death_check)); */
+/* 	} */
+/* 	return (NULL); */
+/* } */
 
 void	start_dining(t_info *info)
 {
@@ -58,7 +58,7 @@ void	start_dining(t_info *info)
 	while (i < info->nb_philo)
 	{
 		pthread_create(&(info->philo[i].thread), NULL, philo_routine, &info->philo[i]);
-		pthread_create(&(info->philo[i].death_thread), NULL, observe_philo_dead, &info->philo[i]);
+		/* pthread_create(&(info->philo[i].death_thread), NULL, observe_philo_dead, &info->philo[i]); */
 		i++;
 	}
 }
@@ -71,7 +71,7 @@ void	join_thread(t_info *info)
 	while (i < info->nb_philo)
 	{
 		pthread_join(info->philo[i].thread, NULL);
-		pthread_join(info->philo[i].death_thread, NULL);
+		/* pthread_join(info->philo[i].death_thread, NULL); */
 		i++;
 	}
 }
