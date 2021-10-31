@@ -37,10 +37,10 @@ void	*observe_philo_dead(void *philo_ptr)
 
 	philo = philo_ptr;
 	info = philo->info;
-	while (philo->info->end_flag == false)
+	while (info->end_flag == false)
 	{
 		pthread_mutex_lock(&(info->death_check));
-		if (get_ms_timestamp() - philo->time_last_eat > philo->info->time_die)
+		if (get_ms_timestamp() - philo->time_last_eat > info->time_die)
 		{
 			philo_die(philo);
 			info->end_flag = true;
@@ -63,6 +63,19 @@ void	start_dining(t_info *info)
 	}
 }
 
+void	join_thread(t_info *info)
+{
+	int	i;
+
+	i = 0;
+	while (i < info->nb_philo)
+	{
+		pthread_join(info->philo[i].thread, NULL);
+		pthread_join(info->philo[i].death_thread, NULL);
+		i++;
+	}
+}
+
 int	main(int argc, char **argv)
 {
 	t_info	info;
@@ -78,12 +91,6 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	start_dining(&info);
-	int	i = 0;
-	while (i < info.nb_philo)
-	{
-		pthread_join(info.philo[i].thread, NULL);
-		pthread_join(info.philo[i].death_thread, NULL);
-		i++;
-	}
+	join_thread(&info);
 	return (0);
 }

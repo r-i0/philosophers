@@ -26,7 +26,7 @@ void	philo_eat(t_philo *philo)
 void	philo_sleep(t_philo *philo)
 {
 	put_act(philo, "is sleeping");
-	usleep(((t_philo*)philo)->info->time_sleep * 1000);
+	usleep(philo->info->time_sleep * 1000);
 }
 
 void	philo_die(t_philo *philo)
