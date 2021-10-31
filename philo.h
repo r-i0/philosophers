@@ -41,5 +41,9 @@ void	ft_putstr_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 bool	philo_init(char **argv, t_info *info);
 unsigned long	get_ms_timestamp(void);
+void	philo_eat(t_philo *philo);
+void	philo_sleep(t_philo *philo);
+void	philo_die(t_philo *philo);
+void	philo_think(t_philo *philo);
 
 #endif
