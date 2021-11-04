@@ -13,7 +13,9 @@ unsigned long	get_ms_timestamp(void)
 void	*philo_routine(void *philo)
 {
 	t_info	*info;
+	bool	end;
 
+	end = false;
 	info = ((t_philo*)philo)->info;
 	if (((t_philo*)philo)->nb % 2)
 	{
@@ -21,11 +23,22 @@ void	*philo_routine(void *philo)
 	}
 	while (1)
 	{
+		pthread_mutex_lock(&(info->mu_died));
 		if (info->end_flag == true)
+		{
+			end = true;
+		}
+		pthread_mutex_unlock(&(info->mu_died));
+		if (end == false)
+		{
+			philo_eat(philo);
+			philo_sleep(philo);
+			philo_think(philo);
+		}
+		else
+		{
 			break ;
-		philo_eat(philo);
-		philo_sleep(philo);
-		philo_think(philo);
+		}
 	}
 	return (NULL);
 }
@@ -34,18 +47,29 @@ void	*observe_philo_dead(void *philo_ptr)
 {
 	t_philo	*philo;
 	t_info	*info;
+	bool	end;
 
 	philo = philo_ptr;
 	info = philo->info;
-	while (info->end_flag == false)
+	end = false;
+	while (end == false)
 	{
-		pthread_mutex_lock(&(info->death_check));
-		if (get_ms_timestamp() - philo->time_last_eat > info->time_die)
+		pthread_mutex_lock(&(info->mu_died));
+		if (info->end_flag == true)
+		{
+			end = true;
+		}
+		pthread_mutex_unlock(&(info->mu_died));
+		pthread_mutex_lock(&(info->mu_time));
+		if (end == false && get_ms_timestamp() - philo->time_last_eat > info->time_die)
 		{
 			philo_die(philo);
+			pthread_mutex_lock(&(info->mu_died));
 			info->end_flag = true;
+			pthread_mutex_unlock(&(info->mu_died));
+			end = true;
 		}
-		pthread_mutex_unlock(&(info->death_check));
+		pthread_mutex_unlock(&(info->mu_time));
 	}
 	return (NULL);
 }
