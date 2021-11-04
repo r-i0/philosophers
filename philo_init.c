@@ -35,6 +35,8 @@ static bool	init_info(char **argv, t_info *info)
 	info->fork = malloc(sizeof(pthread_mutex_t) * (info->nb_philo + 1));
 	if (info->philo == NULL || info->fork == NULL)
 		err = true;
+	pthread_mutex_init(&(info->mu_time), NULL);
+	pthread_mutex_init(&(info->mu_died), NULL);
 	return (err);
 }
 

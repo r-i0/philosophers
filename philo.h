@@ -32,8 +32,8 @@ typedef struct s_info
 	int				time_must_eat;
 	bool			end_flag;
 	pthread_mutex_t	*fork;
-	pthread_mutex_t	put;
-	pthread_mutex_t	death_check;
+	pthread_mutex_t	mu_time;
+	pthread_mutex_t	mu_died;
 	t_philo			*philo;
 }	t_info;
 

@@ -30,4 +30,7 @@ fclean: clean
 
 re: fclean all
 
+sanitize: $(OBJS)
+	$(CC) $(CFLAGS) -fsanitize=thread -g -o $(NAME) $(OBJS)
+
 .phony: all clean fclean re
