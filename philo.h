@@ -14,11 +14,12 @@
 
 typedef struct s_philo
 {
-	int			nb;
-	int			left_fork;
-	int			right_fork;
-	pthread_t	thread;
-	pthread_t	death_thread;
+	int				nb;
+	int				left_fork;
+	int				right_fork;
+	int				cnt_eat;
+	pthread_t		thread;
+	pthread_t		death_thread;
 	unsigned long	time_last_eat;
 	struct s_info	*info;
 }	t_philo;
@@ -29,7 +30,7 @@ typedef struct s_info
 	unsigned long	time_die;
 	int				time_eat;
 	int				time_sleep;
-	int				time_must_eat;
+	int				times_must_eat;
 	bool			end_flag;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	mu_time;

@@ -29,6 +29,7 @@ void	philo_eat(t_philo *philo)
 	put_act(philo, "has taken a fork");
 	pthread_mutex_lock(&(philo->info->mu_time));
 	philo->time_last_eat = put_act(philo, "is eating");
+	philo->cnt_eat++;
 	pthread_mutex_unlock(&(philo->info->mu_time));
 	usleep(philo->info->time_eat * 1000);
 	pthread_mutex_unlock(&(philo->info->fork[philo->left_fork]));

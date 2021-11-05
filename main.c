@@ -2,6 +2,23 @@
 #include <pthread.h>
 #include <stdio.h>
 
+bool	check_all_philo_ate(t_info *info)
+{
+	int	i;
+
+	i = 0;
+	if (info->times_must_eat == -1)
+		return (false);
+	while (i < info->nb_philo)
+	{
+		if (info->philo[i].cnt_eat < info->times_must_eat)
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
+
 unsigned long	get_ms_timestamp(void)
 {
 	struct timeval tv;
@@ -25,20 +42,18 @@ void	*philo_routine(void *philo)
 	{
 		pthread_mutex_lock(&(info->mu_died));
 		if (info->end_flag == true)
+
 		{
 			end = true;
 		}
 		pthread_mutex_unlock(&(info->mu_died));
-		if (end == false)
-		{
-			philo_eat(philo);
-			philo_sleep(philo);
-			philo_think(philo);
-		}
-		else
+		if (end == true)
 		{
 			break ;
 		}
+		philo_eat(philo);
+		philo_sleep(philo);
+		philo_think(philo);
 	}
 	return (NULL);
 }
@@ -61,6 +76,13 @@ void	*observe_philo_dead(void *philo_ptr)
 		}
 		pthread_mutex_unlock(&(info->mu_died));
 		pthread_mutex_lock(&(info->mu_time));
+		if (check_all_philo_ate(info))
+		{
+			pthread_mutex_lock(&(info->mu_died));
+			info->end_flag = true;
+			pthread_mutex_unlock(&(info->mu_died));
+			end =true;
+		}
 		if (end == false && get_ms_timestamp() - philo->time_last_eat > info->time_die)
 		{
 			philo_die(philo);
