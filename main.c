@@ -1,40 +1,39 @@
 #include "philo.h"
-#include <pthread.h>
-#include <stdio.h>
 
-bool	check_all_philo_ate(t_info *info)
+bool	is_all_philos_ate(t_info *info)
 {
-	int	i;
+	int		i;
+	bool	ate;
 
 	i = 0;
-	if (info->times_must_eat == -1)
-		return (false);
-	while (i < info->nb_philo)
+	ate = false;
+	pthread_mutex_lock(&(info->mu_time));
+	while (info->times_must_eat != -1 && i < info->nb_philo)
 	{
 		if (info->philo[i].cnt_eat < info->times_must_eat)
-			return (false);
+			ate = true;
 		i++;
 	}
-	return (true);
+	pthread_mutex_unlock(&(info->mu_time));
+	return (ate);
 }
-
 
 unsigned long	get_ms_timestamp(void)
 {
-	struct timeval tv;
+	struct timeval	tv;
 
-	gettimeofday(&tv, NULL);//
+	gettimeofday(&tv, NULL);
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
-void	*philo_routine(void *philo)
+void	*philo_routine(void *philo_ptr)
 {
 	t_info	*info;
-	bool	end;
+	t_philo	*philo;
 
-	end = false;
-	info = ((t_philo*)philo)->info;
-	if (((t_philo*)philo)->nb % 2)
+	philo = philo_ptr;
+	info = philo->info;
+	if (philo->nb % 2)
 	{
 		usleep(100);
 	}
@@ -42,15 +41,11 @@ void	*philo_routine(void *philo)
 	{
 		pthread_mutex_lock(&(info->mu_died));
 		if (info->end_flag == true)
-
 		{
-			end = true;
-		}
-		pthread_mutex_unlock(&(info->mu_died));
-		if (end == true)
-		{
+			pthread_mutex_unlock(&(info->mu_died));
 			break ;
 		}
+		pthread_mutex_unlock(&(info->mu_died));
 		philo_eat(philo);
 		philo_sleep(philo);
 		philo_think(philo);
@@ -58,53 +53,72 @@ void	*philo_routine(void *philo)
 	return (NULL);
 }
 
+bool	is_end(t_info *info)
+{
+	bool	end;
+
+	end = false;
+	pthread_mutex_lock(&(info->mu_died));
+	if (info->end_flag == true)
+	{
+		end = true;
+	}
+	pthread_mutex_unlock(&(info->mu_died));
+	return (end);
+}
+
+bool	is_die(t_info *info, t_philo *philo)
+{
+	bool	die;
+
+	die = false;
+	pthread_mutex_lock(&(info->mu_time));
+	if (get_ms_timestamp() - philo->time_last_eat > info->time_die)
+	{
+		die = true;
+	}
+	pthread_mutex_unlock(&(info->mu_time));
+	return (die);
+}
+
 void	*observe_philo_dead(void *philo_ptr)
 {
 	t_philo	*philo;
 	t_info	*info;
-	bool	end;
 
 	philo = philo_ptr;
 	info = philo->info;
-	end = false;
-	while (end == false)
+	while (1)
 	{
-		pthread_mutex_lock(&(info->mu_died));
-		if (info->end_flag == true)
-		{
-			end = true;
-		}
-		pthread_mutex_unlock(&(info->mu_died));
-		pthread_mutex_lock(&(info->mu_time));
-		if (check_all_philo_ate(info))
+		if (is_end(info))
+			break ;
+		if (is_all_philos_ate(info))
 		{
 			pthread_mutex_lock(&(info->mu_died));
 			info->end_flag = true;
 			pthread_mutex_unlock(&(info->mu_died));
-			end =true;
+			break ;
 		}
-		if (end == false && get_ms_timestamp() - philo->time_last_eat > info->time_die)
+		if (is_die(info, philo))
 		{
 			philo_die(philo);
-			pthread_mutex_lock(&(info->mu_died));
-			info->end_flag = true;
-			pthread_mutex_unlock(&(info->mu_died));
-			end = true;
+			break ;
 		}
-		pthread_mutex_unlock(&(info->mu_time));
 	}
 	return (NULL);
 }
 
 void	start_dining(t_info *info)
 {
-	int	i;
+	int		i;
+	t_philo	*philo;
 
+	philo = info->philo;
 	i = 0;
 	while (i < info->nb_philo)
 	{
-		pthread_create(&(info->philo[i].thread), NULL, philo_routine, &info->philo[i]);
-		pthread_create(&(info->philo[i].death_thread), NULL, observe_philo_dead, &info->philo[i]);
+		pthread_create(&philo[i].thread, NULL, philo_routine, &philo[i]);
+		pthread_create(&philo[i].death_thread, NULL, observe_philo_dead, &philo[i]);
 		i++;
 	}
 }

@@ -44,7 +44,13 @@ void	philo_sleep(t_philo *philo)
 
 void	philo_die(t_philo *philo)
 {
+	t_info	*info;
+
+	info = philo->info;
 	put_act(philo, "died");
+	pthread_mutex_lock(&(info->mu_died));
+	info->end_flag = true;
+	pthread_mutex_unlock(&(info->mu_died));
 }
 
 void	philo_think(t_philo *philo)

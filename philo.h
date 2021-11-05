@@ -1,16 +1,16 @@
 #ifndef PHILO_H
 # define PHILO_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <pthread.h>
-#include <stdbool.h>
-#include <string.h>
-#include <limits.h>
-#include <assert.h>
-#include <errno.h>
-#include <sys/time.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <pthread.h>
+# include <stdbool.h>
+# include <string.h>
+# include <limits.h>
+# include <assert.h>
+# include <errno.h>
+# include <sys/time.h>
 
 typedef struct s_philo
 {
@@ -38,14 +38,14 @@ typedef struct s_info
 	t_philo			*philo;
 }	t_info;
 
-int		ft_atoi(const char *str, bool *err);
-void	ft_putstr_fd(char *s, int fd);
-void	ft_putnbr_fd(int n, int fd);
-bool	philo_init(char **argv, t_info *info);
+int				ft_atoi(const char *str, bool *err);
+void			ft_putstr_fd(char *s, int fd);
+void			ft_putnbr_fd(int n, int fd);
+bool			philo_init(char **argv, t_info *info);
 unsigned long	get_ms_timestamp(void);
-void	philo_eat(t_philo *philo);
-void	philo_sleep(t_philo *philo);
-void	philo_die(t_philo *philo);
-void	philo_think(t_philo *philo);
+void			philo_eat(t_philo *philo);
+void			philo_sleep(t_philo *philo);
+void			philo_die(t_philo *philo);
+void			philo_think(t_philo *philo);
 
 #endif

@@ -1,6 +1,6 @@
 #include "philo.h"
 
-bool ft_isdigit(int c)
+bool	ft_isdigit(int c)
 {
 	if (c >= '0' && c <= '9')
 		return (true);
@@ -8,9 +8,9 @@ bool ft_isdigit(int c)
 		return (false);
 }
 
-int check_error(long num, const char *str, int negative, int i)
+int	check_error(long num, const char *str, int negative, int i)
 {
-	long real_num;
+	long	real_num;
 
 	real_num = num * negative;
 	if (!ft_isdigit(str[i])
@@ -20,11 +20,11 @@ int check_error(long num, const char *str, int negative, int i)
 	return (0);
 }
 
-int ft_atoi(const char *str, bool *err)
+int	ft_atoi(const char *str, bool *err)
 {
-	int i;
-	int negative;
-	long num;
+	int		i;
+	int		negative;
+	long	num;
 
 	i = 0;
 	num = 0;
