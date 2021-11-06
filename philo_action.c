@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo_action.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/06 10:43:28 by rsudo             #+#    #+#             */
+/*   Updated: 2021/11/06 10:43:29 by rsudo            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 unsigned long	put_act(t_philo *philo, char *msg)
@@ -57,4 +69,3 @@ void	philo_think(t_philo *philo)
 {
 	put_act(philo, "is thinking");
 }
-

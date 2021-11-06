@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/06 10:40:17 by rsudo             #+#    #+#             */
+/*   Updated: 2021/11/06 10:50:57 by rsudo            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 bool	is_all_philos_ate(t_info *info)
@@ -81,7 +93,7 @@ bool	is_die(t_info *info, t_philo *philo)
 	return (die);
 }
 
-void	*observe_philo_dead(void *philo_ptr)
+void	*observe_philo_end(void *philo_ptr)
 {
 	t_philo	*philo;
 	t_info	*info;
@@ -118,7 +130,8 @@ void	start_dining(t_info *info)
 	while (i < info->nb_philo)
 	{
 		pthread_create(&philo[i].thread, NULL, philo_routine, &philo[i]);
-		pthread_create(&philo[i].death_thread, NULL, observe_philo_dead, &philo[i]);
+		pthread_create(&philo[i].death_thread, NULL, \
+				observe_philo_end, &philo[i]);
 		i++;
 	}
 }
