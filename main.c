@@ -6,7 +6,7 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/06 10:40:17 by rsudo             #+#    #+#             */
-/*   Updated: 2021/11/25 13:11:00 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/11/25 15:47:44 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,21 @@ void	join_thread(t_info *info)
 	}
 }
 
+void	free_and_destoroy(t_info *info)
+{
+	free(info->philo);
+	free(info->fork);
+	pthread_mutex_destroy(&(info->mu_time));
+	pthread_mutex_destroy(&(info->mu_died));
+}
+
+void end(void)__attribute__((destructor));
+
+void end(void)
+{
+    system("leaks philo");
+}
+
 int	main(int argc, char **argv)
 {
 	t_info	info;
@@ -185,5 +200,6 @@ int	main(int argc, char **argv)
 	}
 	start_dining(&info);
 	join_thread(&info);
+	free_and_destoroy(&info);
 	return (0);
 }
