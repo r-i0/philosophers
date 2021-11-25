@@ -6,7 +6,7 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/06 10:40:17 by rsudo             #+#    #+#             */
-/*   Updated: 2021/11/24 23:56:02 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/11/25 13:11:00 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,16 @@ bool	is_all_philos_ate(t_info *info)
 	bool	ate;
 
 	i = 0;
-	ate = false;
+	ate = true;
 	pthread_mutex_lock(&(info->mu_time));
 	while (info->times_must_eat != -1 && i < info->nb_philo)
 	{
 		if (info->philo[i].cnt_eat < info->times_must_eat)
-			ate = true;
+			ate = false;
 		i++;
 	}
+	if (info->times_must_eat == -1)
+		ate = false;
 	pthread_mutex_unlock(&(info->mu_time));
 	return (ate);
 }
