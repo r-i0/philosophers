@@ -6,7 +6,7 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/06 10:43:28 by rsudo             #+#    #+#             */
-/*   Updated: 2021/11/25 10:45:28 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/11/25 11:07:25 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,13 @@
 unsigned long	put_act(t_philo *philo, char *msg)
 {
 	unsigned long	timestamp;
-	bool			end;
 
-	end = false;
 	pthread_mutex_lock(&(philo->info->mu_died));
 	if (philo->info->end_flag == true)
 	{
-		end = true;
 		timestamp = 0;
 	}
-	if (end == false)
+	else
 	{
 		timestamp = get_ms_timestamp();
 		printf("%lu %d %s\n", timestamp, philo->nb, msg);
