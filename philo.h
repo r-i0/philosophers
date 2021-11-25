@@ -6,7 +6,7 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/06 10:43:21 by rsudo             #+#    #+#             */
-/*   Updated: 2021/11/06 10:43:22 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/11/25 10:27:35 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,11 @@ void			ft_putstr_fd(char *s, int fd);
 void			ft_putnbr_fd(int n, int fd);
 bool			philo_init(char **argv, t_info *info);
 unsigned long	get_ms_timestamp(void);
-void			philo_eat(t_philo *philo);
+int				philo_eat(t_philo *philo);
 void			philo_sleep(t_philo *philo);
 void			philo_die(t_philo *philo);
 void			philo_think(t_philo *philo);
+unsigned long	put_act(t_philo *philo, char *msg);
+void			divide_sleep(unsigned long ms);
 
 #endif

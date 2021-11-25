@@ -6,7 +6,7 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/06 10:40:17 by rsudo             #+#    #+#             */
-/*   Updated: 2021/11/06 10:50:57 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/11/24 23:56:02 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,31 @@ unsigned long	get_ms_timestamp(void)
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
+int	philo_eat_one(t_philo *philo)
+{
+	pthread_mutex_lock(&(philo->info->fork[philo->left_fork]));
+	put_act(philo, "has taken a fork");
+	pthread_mutex_unlock(&(philo->info->fork[philo->left_fork]));
+	return (1);
+}
+
 void	*philo_routine(void *philo_ptr)
 {
 	t_info	*info;
 	t_philo	*philo;
+	int one;
 
+	one = 0;
 	philo = philo_ptr;
 	info = philo->info;
 	if (philo->nb % 2)
 	{
 		usleep(100);
 	}
+	pthread_mutex_lock(&info->mu_time);
+	if (info->nb_philo == 1)
+		one = philo_eat_one(philo);
+	pthread_mutex_unlock(&info->mu_time);
 	while (1)
 	{
 		pthread_mutex_lock(&(info->mu_died));
@@ -58,9 +72,12 @@ void	*philo_routine(void *philo_ptr)
 			break ;
 		}
 		pthread_mutex_unlock(&(info->mu_died));
-		philo_eat(philo);
-		philo_sleep(philo);
-		philo_think(philo);
+		if (one == 0)
+		{
+			philo_eat(philo);
+			philo_sleep(philo);
+			philo_think(philo);
+		}
 	}
 	return (NULL);
 }
@@ -155,6 +172,7 @@ int	main(int argc, char **argv)
 
 	if (argc < 5 || argc > 6)
 	{
+		/* divide_sleep(20000); */
 		ft_putstr_fd("invalid argument\n", STDERR_FILENO);
 		return (1);
 	}
