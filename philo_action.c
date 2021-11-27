@@ -1,11 +1,12 @@
 #include "philo.h"
 
-int acc_sleep(unsigned long ms)
+int	acc_sleep(unsigned long ms)
 {
 	const unsigned long	time_end = get_ms_timestamp() + ms;
-	unsigned long timestamp;
+	unsigned long		timestamp;
 
 	timestamp = get_ms_timestamp();
+	usleep(ms * 1000 - 1000);
 	while (timestamp < time_end)
 	{
 		usleep(100);
@@ -55,7 +56,8 @@ void	philo_eat(t_philo *philo)
 
 void	philo_sleep(t_philo *philo)
 {
-	const unsigned long timestamp = put_act(philo, "is sleeping");
+	const unsigned long	timestamp = put_act(philo, "is sleeping");
+
 	if (timestamp != 0)
 	{
 		acc_sleep(philo->info->time_sleep);
@@ -64,14 +66,14 @@ void	philo_sleep(t_philo *philo)
 
 void	philo_die(t_philo *philo)
 {
-	t_info	*info;
+	t_info				*info;
 	const unsigned long	timestamp = get_ms_timestamp();
 
 	info = philo->info;
 	pthread_mutex_lock(&(info->mu_died));
 	if (info->end_flag == false)
 	{
-		printf("%lu %d is died\n", timestamp, philo->nb);
+		printf("%lu %d died\n", timestamp, philo->nb);
 		info->end_flag = true;
 	}
 	pthread_mutex_unlock(&(info->mu_died));
@@ -81,4 +83,3 @@ void	philo_think(t_philo *philo)
 {
 	put_act(philo, "is thinking");
 }
-

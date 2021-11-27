@@ -24,10 +24,12 @@ unsigned long	get_ms_timestamp(void)
 	int				ret;
 
 	ret = gettimeofday(&tv, NULL);
-	if (ret == 0)
-		return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
-	else
+	if (ret != 0)
+	{
+		ft_putstr_fd("error: gettimeofday\n", STDERR_FILENO);
 		return (0);
+	}
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
 void	*philo_routine(void *philo_ptr)
@@ -146,29 +148,52 @@ int	join_thread(t_info *info)
 	return (0);
 }
 
+int	free_info(t_info *info)
+{
+	int	i;
+
+	i = 0;
+	while (i < info->nb_philo)
+	{
+		if (pthread_mutex_destroy(&(info->fork[i])) != 0)
+			return (-1);
+		i++;
+	}
+	if (pthread_mutex_destroy(&(info->mu_time)))
+		return (-1);
+	if (pthread_mutex_destroy(&(info->mu_died)))
+		return (-1);
+	free(info->philo);
+	free(info->fork);
+	return (0);
+}
+
+/* void end(void)__attribute__((destructor)); */
+
+/* void end(void) */
+/* { */
+/*     system("leaks philo"); */
+/* } */
+
+int	ft_puterror(char *msg)
+{
+	ft_putstr_fd(msg, STDERR_FILENO);
+	return (1);
+}
+
 int	main(int argc, char **argv)
 {
 	t_info	info;
 
 	if (argc < 5 || argc > 6)
-	{
-		ft_putstr_fd("invalid argument\n", STDERR_FILENO);
-		return (1);
-	}
+		return (ft_puterror("invalid argument\n"));
 	if (philo_init(argv, &info))
-	{
-		ft_putstr_fd("error\n", STDERR_FILENO);
-		return (1);
-	}
+		return (ft_puterror("error: init\n"));
 	if (start_dining(&info) == -1)
-	{
-		ft_putstr_fd("error\n", STDERR_FILENO);
-		return (1);
-	}
+		return (ft_puterror("error: pthread_create\n"));
 	if (join_thread(&info))
-	{
-		ft_putstr_fd("error\n", STDERR_FILENO);
-		return (1);
-	}
+		return (ft_puterror("error: pthread_join\n"));
+	if (free_info(&info))
+		return (ft_puterror("error: pthread_destroy\n"));
 	return (0);
 }
