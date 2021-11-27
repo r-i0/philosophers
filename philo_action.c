@@ -48,7 +48,7 @@ void	philo_eat(t_philo *philo)
 	}
 	philo->cnt_eat++;
 	pthread_mutex_unlock(&(philo->info->mu_time));
-	usleep(philo->info->time_eat * 1000);
+	acc_sleep(philo->info->time_sleep);
 	pthread_mutex_unlock(&(philo->info->fork[philo->left_fork]));
 	pthread_mutex_unlock(&(philo->info->fork[philo->right_fork]));
 }
@@ -58,7 +58,7 @@ void	philo_sleep(t_philo *philo)
 	const unsigned long timestamp = put_act(philo, "is sleeping");
 	if (timestamp != 0)
 	{
-		usleep(philo->info->time_sleep * 1000);
+		acc_sleep(philo->info->time_sleep);
 	}
 }
 
