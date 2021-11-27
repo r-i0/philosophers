@@ -21,9 +21,13 @@ bool	is_all_philos_ate(t_info *info)
 unsigned long	get_ms_timestamp(void)
 {
 	struct timeval	tv;
+	int				ret;
 
-	gettimeofday(&tv, NULL);
-	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+	ret = gettimeofday(&tv, NULL);
+	if (ret == 0)
+		return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+	else
+		return (0);
 }
 
 void	*philo_routine(void *philo_ptr)
@@ -108,7 +112,7 @@ void	*observe_philo_dead(void *philo_ptr)
 	return (NULL);
 }
 
-void	start_dining(t_info *info)
+int	start_dining(t_info *info)
 {
 	int		i;
 	t_philo	*philo;
@@ -117,23 +121,29 @@ void	start_dining(t_info *info)
 	i = 0;
 	while (i < info->nb_philo)
 	{
-		pthread_create(&philo[i].thread, NULL, philo_routine, &philo[i]);
-		pthread_create(&philo[i].death_thread, NULL, observe_philo_dead, &philo[i]);
+		if (pthread_create(&philo[i].thread, NULL, philo_routine, &philo[i]) != 0)
+			return (-1);
+		if (pthread_create(&philo[i].death_thread, NULL, observe_philo_dead, &philo[i]) != 0)
+			return (-1);
 		i++;
 	}
+	return (0);
 }
 
-void	join_thread(t_info *info)
+int	join_thread(t_info *info)
 {
 	int	i;
 
 	i = 0;
 	while (i < info->nb_philo)
 	{
-		pthread_join(info->philo[i].thread, NULL);
-		pthread_join(info->philo[i].death_thread, NULL);
+		if (pthread_join(info->philo[i].thread, NULL) != 0)
+			return (-1);
+		if (pthread_join(info->philo[i].death_thread, NULL) != 0)
+			return (-1);
 		i++;
 	}
+	return (0);
 }
 
 int	main(int argc, char **argv)
@@ -150,7 +160,15 @@ int	main(int argc, char **argv)
 		ft_putstr_fd("error\n", STDERR_FILENO);
 		return (1);
 	}
-	start_dining(&info);
-	join_thread(&info);
+	if (start_dining(&info) == -1)
+	{
+		ft_putstr_fd("error\n", STDERR_FILENO);
+		return (1);
+	}
+	if (join_thread(&info))
+	{
+		ft_putstr_fd("error\n", STDERR_FILENO);
+		return (1);
+	}
 	return (0);
 }

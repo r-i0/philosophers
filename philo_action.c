@@ -1,5 +1,15 @@
 #include "philo.h"
 
+void acc_sleep(unsigned long ms)
+{
+	const unsigned long time_end = get_ms_timestamp() + ms;
+
+	while (get_ms_timestamp() < time_end)
+	{
+		usleep(100);
+	}
+}
+
 unsigned long	put_act(t_philo *philo, char *msg)
 {
 	unsigned long	timestamp;
@@ -38,8 +48,11 @@ void	philo_eat(t_philo *philo)
 
 void	philo_sleep(t_philo *philo)
 {
-	put_act(philo, "is sleeping");
-	usleep(philo->info->time_sleep * 1000);
+	const unsigned long timestamp = put_act(philo, "is sleeping");
+	if (timestamp != 0)
+	{
+		usleep(philo->info->time_sleep * 1000);
+	}
 }
 
 void	philo_die(t_philo *philo)
