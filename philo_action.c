@@ -1,32 +1,32 @@
 #include "philo.h"
 
-void acc_sleep(unsigned long ms)
+int acc_sleep(unsigned long ms)
 {
-	const unsigned long time_end = get_ms_timestamp() + ms;
+	const unsigned long	time_end = get_ms_timestamp() + ms;
+	unsigned long timestamp;
 
-	while (get_ms_timestamp() < time_end)
+	timestamp = get_ms_timestamp();
+	while (timestamp < time_end)
 	{
 		usleep(100);
+		timestamp = get_ms_timestamp();
+		if (timestamp == 0)
+			return (-1);
 	}
+	return (0);
 }
 
 unsigned long	put_act(t_philo *philo, char *msg)
 {
-	unsigned long	timestamp;
-	bool			end;
+	const unsigned long	timestamp = get_ms_timestamp();
 
-	end = false;
 	pthread_mutex_lock(&(philo->info->mu_died));
 	if (philo->info->end_flag == true)
 	{
-		end = true;
-		timestamp = 0;
+		pthread_mutex_unlock(&(philo->info->mu_died));
+		return (0);
 	}
-	if (end == false)
-	{
-		timestamp = get_ms_timestamp();
-		printf("%lu %d %s\n", timestamp, philo->nb, msg);
-	}
+	printf("%lu %d %s\n", timestamp, philo->nb, msg);
 	pthread_mutex_unlock(&(philo->info->mu_died));
 	return (timestamp);
 }
@@ -39,6 +39,13 @@ void	philo_eat(t_philo *philo)
 	put_act(philo, "has taken a fork");
 	pthread_mutex_lock(&(philo->info->mu_time));
 	philo->time_last_eat = put_act(philo, "is eating");
+	if (philo->time_last_eat == 0)
+	{
+		pthread_mutex_unlock(&(philo->info->mu_time));
+		pthread_mutex_unlock(&(philo->info->fork[philo->left_fork]));
+		pthread_mutex_unlock(&(philo->info->fork[philo->right_fork]));
+		return ;
+	}
 	philo->cnt_eat++;
 	pthread_mutex_unlock(&(philo->info->mu_time));
 	usleep(philo->info->time_eat * 1000);
@@ -58,11 +65,15 @@ void	philo_sleep(t_philo *philo)
 void	philo_die(t_philo *philo)
 {
 	t_info	*info;
+	const unsigned long	timestamp = get_ms_timestamp();
 
 	info = philo->info;
-	put_act(philo, "died");
 	pthread_mutex_lock(&(info->mu_died));
-	info->end_flag = true;
+	if (info->end_flag == false)
+	{
+		printf("%lu %d is died\n", timestamp, philo->nb);
+		info->end_flag = true;
+	}
 	pthread_mutex_unlock(&(info->mu_died));
 }
 

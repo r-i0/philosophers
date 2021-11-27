@@ -39,7 +39,7 @@ void	*philo_routine(void *philo_ptr)
 	info = philo->info;
 	if (philo->nb % 2)
 	{
-		usleep(100);
+		usleep(500);
 	}
 	while (1)
 	{
