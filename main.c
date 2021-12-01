@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/01 12:11:48 by rsudo             #+#    #+#             */
+/*   Updated: 2021/12/01 12:14:40 by rsudo            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 void	*philo_routine(void *philo_ptr)
@@ -30,15 +42,15 @@ void	*philo_routine(void *philo_ptr)
 int	start_dining(t_info *info)
 {
 	int		i;
-	t_philo	*philo;
+	t_philo	*p;
 
-	philo = info->philo;
+	p = info->philo;
 	i = 0;
 	while (i < info->nb_philo)
 	{
-		if (pthread_create(&philo[i].thread, NULL, philo_routine, &philo[i]) != 0)
+		if (pthread_create(&p[i].thread, NULL, philo_routine, &p[i]) != 0)
 			return (-1);
-		if (pthread_create(&philo[i].death_thread, NULL, observer, &philo[i]) != 0)
+		if (pthread_create(&p[i].death_thread, NULL, observer, &p[i]) != 0)
 			return (-1);
 		i++;
 	}
