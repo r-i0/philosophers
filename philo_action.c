@@ -6,7 +6,7 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 12:11:40 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/01 12:11:41 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/01 14:32:18 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ unsigned long	put_act(t_philo *philo, char *msg)
 	return (timestamp);
 }
 
-int	philo_eat(t_philo *philo)
+void	philo_eat(t_philo *philo)
 {
 	pthread_mutex_lock(&(philo->info->fork[philo->left_fork]));
 	put_act(philo, "has taken a fork");
@@ -47,7 +47,6 @@ int	philo_eat(t_philo *philo)
 	acc_sleep(philo->info->time_sleep);
 	pthread_mutex_unlock(&(philo->info->fork[philo->left_fork]));
 	pthread_mutex_unlock(&(philo->info->fork[philo->right_fork]));
-	return (1);
 }
 
 void divide_sleep(unsigned long ms)
