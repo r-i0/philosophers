@@ -1,22 +1,5 @@
 #include "philo.h"
 
-int	acc_sleep(unsigned long ms)
-{
-	const unsigned long	time_end = get_ms_timestamp() + ms;
-	unsigned long		timestamp;
-
-	timestamp = get_ms_timestamp();
-	usleep(ms * 1000 - 1000);
-	while (timestamp < time_end)
-	{
-		usleep(100);
-		timestamp = get_ms_timestamp();
-		if (timestamp == 0)
-			return (-1);
-	}
-	return (0);
-}
-
 unsigned long	put_act(t_philo *philo, char *msg)
 {
 	const unsigned long	timestamp = get_ms_timestamp();

@@ -1,42 +1,5 @@
 #include "philo.h"
 
-bool	is_all_philos_ate(t_info *info)
-{
-	int		i;
-	bool	ate;
-
-	i = 0;
-	ate = true;
-	pthread_mutex_lock(&(info->mu_time));
-	if (info->times_must_eat == -1)
-	{
-		pthread_mutex_unlock(&(info->mu_time));
-		return (false);
-	}
-	while (i < info->nb_philo)
-	{
-		if (info->philo[i].cnt_eat < info->times_must_eat)
-			ate = false;
-		i++;
-	}
-	pthread_mutex_unlock(&(info->mu_time));
-	return (ate);
-}
-
-unsigned long	get_ms_timestamp(void)
-{
-	struct timeval	tv;
-	int				ret;
-
-	ret = gettimeofday(&tv, NULL);
-	if (ret != 0)
-	{
-		ft_putstr_fd("error: gettimeofday\n", STDERR_FILENO);
-		return (0);
-	}
-	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
-}
-
 void	*philo_routine(void *philo_ptr)
 {
 	t_info	*info;
@@ -64,61 +27,6 @@ void	*philo_routine(void *philo_ptr)
 	return (NULL);
 }
 
-bool	is_end(t_info *info)
-{
-	bool	end;
-
-	end = false;
-	pthread_mutex_lock(&(info->mu_end));
-	if (info->end == true)
-	{
-		end = true;
-	}
-	pthread_mutex_unlock(&(info->mu_end));
-	return (end);
-}
-
-bool	is_die(t_info *info, t_philo *philo)
-{
-	bool	die;
-
-	die = false;
-	pthread_mutex_lock(&(info->mu_time));
-	if (get_ms_timestamp() - philo->time_last_eat > info->time_die)
-	{
-		die = true;
-	}
-	pthread_mutex_unlock(&(info->mu_time));
-	return (die);
-}
-
-void	*observe_philo_dead(void *philo_ptr)
-{
-	t_philo	*philo;
-	t_info	*info;
-
-	philo = philo_ptr;
-	info = philo->info;
-	while (1)
-	{
-		if (is_end(info))
-			break ;
-		if (is_all_philos_ate(info))
-		{
-			pthread_mutex_lock(&(info->mu_end));
-			info->end = true;
-			pthread_mutex_unlock(&(info->mu_end));
-			break ;
-		}
-		if (is_die(info, philo))
-		{
-			philo_die(philo);
-			break ;
-		}
-	}
-	return (NULL);
-}
-
 int	start_dining(t_info *info)
 {
 	int		i;
@@ -130,7 +38,7 @@ int	start_dining(t_info *info)
 	{
 		if (pthread_create(&philo[i].thread, NULL, philo_routine, &philo[i]) != 0)
 			return (-1);
-		if (pthread_create(&philo[i].death_thread, NULL, observe_philo_dead, &philo[i]) != 0)
+		if (pthread_create(&philo[i].death_thread, NULL, observer, &philo[i]) != 0)
 			return (-1);
 		i++;
 	}
@@ -179,12 +87,6 @@ int	free_info(t_info *info)
 /* { */
 /*     system("leaks philo"); */
 /* } */
-
-int	ft_puterror(char *msg)
-{
-	ft_putstr_fd(msg, STDERR_FILENO);
-	return (1);
-}
 
 int	main(int argc, char **argv)
 {

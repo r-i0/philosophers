@@ -42,10 +42,15 @@ int				ft_atoi(const char *str, bool *err);
 void			ft_putstr_fd(char *s, int fd);
 void			ft_putnbr_fd(int n, int fd);
 bool			philo_init(char **argv, t_info *info);
-unsigned long	get_ms_timestamp(void);
 void			philo_eat(t_philo *philo);
 void			philo_sleep(t_philo *philo);
 void			philo_die(t_philo *philo);
 void			philo_think(t_philo *philo);
+void			*observer(void *philo_ptr);
+
+// utils
+unsigned long	get_ms_timestamp(void);
+int				ft_puterror(char *msg);
+int				acc_sleep(unsigned long ms);
 
 #endif
