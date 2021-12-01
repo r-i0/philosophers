@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/06 10:43:52 by rsudo             #+#    #+#             */
-/*   Updated: 2021/11/06 10:43:53 by rsudo            ###   ########.fr       */
+/*   Created: 2021/12/01 12:12:33 by rsudo             #+#    #+#             */
+/*   Updated: 2021/12/01 12:12:34 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static bool	init_info(char **argv, t_info *info)
 
 	err = false;
 	info->times_must_eat = -1;
-	info->end_flag = false;
+	info->end = false;
 	info->nb_philo = ft_atoi(argv[1], &err);
 	info->time_die = (unsigned long)ft_atoi(argv[2], &err);
 	info->time_eat = ft_atoi(argv[3], &err);
@@ -49,7 +49,7 @@ static bool	init_info(char **argv, t_info *info)
 	if (info->philo == NULL || info->fork == NULL)
 		err = true;
 	pthread_mutex_init(&(info->mu_time), NULL);
-	pthread_mutex_init(&(info->mu_died), NULL);
+	pthread_mutex_init(&(info->mu_end), NULL);
 	return (err);
 }
 

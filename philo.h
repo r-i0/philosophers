@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/06 10:43:21 by rsudo             #+#    #+#             */
-/*   Updated: 2021/11/25 10:27:35 by rsudo            ###   ########.fr       */
+/*   Created: 2021/12/01 12:11:36 by rsudo             #+#    #+#             */
+/*   Updated: 2021/12/01 14:03:35 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,10 @@ typedef struct s_info
 	int				time_eat;
 	int				time_sleep;
 	int				times_must_eat;
-	bool			end_flag;
+	bool			end;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	mu_time;
-	pthread_mutex_t	mu_died;
+	pthread_mutex_t	mu_end;
 	t_philo			*philo;
 }	t_info;
 
@@ -54,12 +54,16 @@ int				ft_atoi(const char *str, bool *err);
 void			ft_putstr_fd(char *s, int fd);
 void			ft_putnbr_fd(int n, int fd);
 bool			philo_init(char **argv, t_info *info);
-unsigned long	get_ms_timestamp(void);
-int				philo_eat(t_philo *philo);
+void			philo_eat(t_philo *philo);
 void			philo_sleep(t_philo *philo);
 void			philo_die(t_philo *philo);
 void			philo_think(t_philo *philo);
+void			*observer(void *philo_ptr);
 unsigned long	put_act(t_philo *philo, char *msg);
-void			divide_sleep(unsigned long ms);
+
+// utils
+unsigned long	get_ms_timestamp(void);
+int				ft_puterror(char *msg);
+int				acc_sleep(unsigned long ms);
 
 #endif

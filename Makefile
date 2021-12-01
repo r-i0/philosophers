@@ -7,7 +7,9 @@ SRCS_NAME =	main.c \
 			ft_putstr_fd.c \
 			ft_putnbr_fd.c \
 			philo_init.c \
-			philo_action.c
+			philo_action.c \
+			observer.c \
+			utils.c
 
 SRCS = ${addprefix ${SRCS_DIR}, ${SRCS_NAME}}
 
