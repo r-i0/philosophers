@@ -31,10 +31,10 @@ typedef struct s_info
 	int				time_eat;
 	int				time_sleep;
 	int				times_must_eat;
-	bool			end_flag;
+	bool			end;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	mu_time;
-	pthread_mutex_t	mu_died;
+	pthread_mutex_t	mu_end;
 	t_philo			*philo;
 }	t_info;
 

@@ -50,13 +50,13 @@ void	*philo_routine(void *philo_ptr)
 	}
 	while (1)
 	{
-		pthread_mutex_lock(&(info->mu_died));
-		if (info->end_flag == true)
+		pthread_mutex_lock(&(info->mu_end));
+		if (info->end == true)
 		{
-			pthread_mutex_unlock(&(info->mu_died));
+			pthread_mutex_unlock(&(info->mu_end));
 			break ;
 		}
-		pthread_mutex_unlock(&(info->mu_died));
+		pthread_mutex_unlock(&(info->mu_end));
 		philo_eat(philo);
 		philo_sleep(philo);
 		philo_think(philo);
@@ -69,12 +69,12 @@ bool	is_end(t_info *info)
 	bool	end;
 
 	end = false;
-	pthread_mutex_lock(&(info->mu_died));
-	if (info->end_flag == true)
+	pthread_mutex_lock(&(info->mu_end));
+	if (info->end == true)
 	{
 		end = true;
 	}
-	pthread_mutex_unlock(&(info->mu_died));
+	pthread_mutex_unlock(&(info->mu_end));
 	return (end);
 }
 
@@ -105,9 +105,9 @@ void	*observe_philo_dead(void *philo_ptr)
 			break ;
 		if (is_all_philos_ate(info))
 		{
-			pthread_mutex_lock(&(info->mu_died));
-			info->end_flag = true;
-			pthread_mutex_unlock(&(info->mu_died));
+			pthread_mutex_lock(&(info->mu_end));
+			info->end = true;
+			pthread_mutex_unlock(&(info->mu_end));
 			break ;
 		}
 		if (is_die(info, philo))
@@ -166,7 +166,7 @@ int	free_info(t_info *info)
 	}
 	if (pthread_mutex_destroy(&(info->mu_time)))
 		return (-1);
-	if (pthread_mutex_destroy(&(info->mu_died)))
+	if (pthread_mutex_destroy(&(info->mu_end)))
 		return (-1);
 	free(info->philo);
 	free(info->fork);

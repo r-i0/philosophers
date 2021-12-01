@@ -21,14 +21,14 @@ unsigned long	put_act(t_philo *philo, char *msg)
 {
 	const unsigned long	timestamp = get_ms_timestamp();
 
-	pthread_mutex_lock(&(philo->info->mu_died));
-	if (philo->info->end_flag == true)
+	pthread_mutex_lock(&(philo->info->mu_end));
+	if (philo->info->end == true)
 	{
-		pthread_mutex_unlock(&(philo->info->mu_died));
+		pthread_mutex_unlock(&(philo->info->mu_end));
 		return (0);
 	}
 	printf("%lu %d %s\n", timestamp, philo->nb, msg);
-	pthread_mutex_unlock(&(philo->info->mu_died));
+	pthread_mutex_unlock(&(philo->info->mu_end));
 	return (timestamp);
 }
 
@@ -70,13 +70,13 @@ void	philo_die(t_philo *philo)
 	const unsigned long	timestamp = get_ms_timestamp();
 
 	info = philo->info;
-	pthread_mutex_lock(&(info->mu_died));
-	if (info->end_flag == false)
+	pthread_mutex_lock(&(info->mu_end));
+	if (info->end == false)
 	{
 		printf("%lu %d died\n", timestamp, philo->nb);
-		info->end_flag = true;
+		info->end = true;
 	}
-	pthread_mutex_unlock(&(info->mu_died));
+	pthread_mutex_unlock(&(info->mu_end));
 }
 
 void	philo_think(t_philo *philo)
