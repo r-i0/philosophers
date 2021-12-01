@@ -27,7 +27,7 @@ unsigned long	put_act(t_philo *philo, char *msg)
 	return (timestamp);
 }
 
-void	philo_eat(t_philo *philo)
+int	philo_eat(t_philo *philo)
 {
 	pthread_mutex_lock(&(philo->info->fork[philo->left_fork]));
 	put_act(philo, "has taken a fork");
@@ -47,6 +47,23 @@ void	philo_eat(t_philo *philo)
 	acc_sleep(philo->info->time_sleep);
 	pthread_mutex_unlock(&(philo->info->fork[philo->left_fork]));
 	pthread_mutex_unlock(&(philo->info->fork[philo->right_fork]));
+	return (1);
+}
+
+void divide_sleep(unsigned long ms)
+{
+	unsigned long time_end = get_ms_timestamp() + ms;
+	unsigned long time_left = time_end - get_ms_timestamp();
+	while (time_left / 2 > 10)
+	{
+		usleep((time_left / 2) * 1000);
+		time_left = time_end - get_ms_timestamp();
+	}
+	while (time_left != 0)
+	{
+		usleep(10);
+		time_left = time_end - get_ms_timestamp();
+	}
 }
 
 void	philo_sleep(t_philo *philo)

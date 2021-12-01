@@ -42,11 +42,21 @@ void	*one_philo(t_info *info, t_philo *philo)
 	return (NULL);
 }
 
+int	philo_eat_one(t_philo *philo)
+{
+	pthread_mutex_lock(&(philo->info->fork[philo->left_fork]));
+	put_act(philo, "has taken a fork");
+	pthread_mutex_unlock(&(philo->info->fork[philo->left_fork]));
+	return (1);
+}
+
 void	*philo_routine(void *philo_ptr)
 {
 	t_info	*info;
 	t_philo	*philo;
+	int one;
 
+	one = 0;
 	philo = philo_ptr;
 	info = philo->info;
 	if (is_one_philo(info))
@@ -73,6 +83,8 @@ int	start_dining(t_info *info)
 {
 	int		i;
 	t_philo	*p;
+
+  
 
 	p = info->philo;
 	i = 0;
