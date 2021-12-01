@@ -6,11 +6,41 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 12:11:48 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/01 12:14:40 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/01 14:20:00 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+bool	is_one_philo(t_info *info)
+{
+	pthread_mutex_lock(&info->mu_time);
+	if (info->nb_philo == 1)
+	{
+		pthread_mutex_unlock(&info->mu_time);
+		return (true);
+	}
+	pthread_mutex_unlock(&info->mu_time);
+	return (false);
+}
+
+void	*one_philo(t_info *info, t_philo *philo)
+{
+	pthread_mutex_lock(&(info->fork[philo->left_fork]));
+	put_act(philo, "has taken a fork");
+	pthread_mutex_unlock(&(info->fork[philo->left_fork]));
+	while (1)
+	{
+		pthread_mutex_lock(&(info->mu_end));
+		if (info->end == true)
+		{
+			pthread_mutex_unlock(&(info->mu_end));
+			break ;
+		}
+		pthread_mutex_unlock(&(info->mu_end));
+	}
+	return (NULL);
+}
 
 void	*philo_routine(void *philo_ptr)
 {
@@ -19,10 +49,10 @@ void	*philo_routine(void *philo_ptr)
 
 	philo = philo_ptr;
 	info = philo->info;
+	if (is_one_philo(info))
+		return (one_philo(info, philo));
 	if (philo->nb % 2)
-	{
-		usleep(500);
-	}
+		usleep(700);
 	while (1)
 	{
 		pthread_mutex_lock(&(info->mu_end));

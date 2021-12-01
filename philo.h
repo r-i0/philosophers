@@ -6,7 +6,7 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 12:11:36 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/01 12:11:37 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/01 14:03:35 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void			philo_sleep(t_philo *philo);
 void			philo_die(t_philo *philo);
 void			philo_think(t_philo *philo);
 void			*observer(void *philo_ptr);
+unsigned long	put_act(t_philo *philo, char *msg);
 
 // utils
 unsigned long	get_ms_timestamp(void);
