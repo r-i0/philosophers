@@ -6,7 +6,7 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 12:11:36 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/01 14:03:35 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/06 12:47:37 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,20 +50,36 @@ typedef struct s_info
 	t_philo			*philo;
 }	t_info;
 
-int				ft_atoi(const char *str, bool *err);
-void			ft_putstr_fd(char *s, int fd);
-void			ft_putnbr_fd(int n, int fd);
+// philo_init.c
 bool			philo_init(char **argv, t_info *info);
+
+// philo_action.c
 void			philo_eat(t_philo *philo);
 void			philo_sleep(t_philo *philo);
 void			philo_die(t_philo *philo);
 void			philo_think(t_philo *philo);
-void			*observer(void *philo_ptr);
 unsigned long	put_act(t_philo *philo, char *msg);
 
-// utils
+// observer.c
+void			*observer(void *philo_ptr);
+
+// utils.c
 unsigned long	get_ms_timestamp(void);
 int				ft_puterror(char *msg);
 int				acc_sleep(unsigned long ms);
+
+// philo_routine.c
+void			*philo_routine(void *philo_ptr);
+
+// join_threads.c
+int				join_threads(t_info *info);
+
+// free_info.c
+int				free_info(t_info *info);
+
+// libft
+int				ft_atoi(const char *str, bool *err);
+void			ft_putstr_fd(char *s, int fd);
+void			ft_putnbr_fd(int n, int fd);
 
 #endif
