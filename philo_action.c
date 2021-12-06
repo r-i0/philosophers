@@ -6,7 +6,7 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 12:11:40 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/01 14:32:18 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/01 18:17:31 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 unsigned long	put_act(t_philo *philo, char *msg)
 {
-	const unsigned long	timestamp = get_ms_timestamp();
+	unsigned long	timestamp;
 
 	pthread_mutex_lock(&(philo->info->mu_end));
 	if (philo->info->end == true)
@@ -22,6 +22,7 @@ unsigned long	put_act(t_philo *philo, char *msg)
 		pthread_mutex_unlock(&(philo->info->mu_end));
 		return (0);
 	}
+	timestamp = get_ms_timestamp();
 	printf("%lu %d %s\n", timestamp, philo->nb, msg);
 	pthread_mutex_unlock(&(philo->info->mu_end));
 	return (timestamp);
@@ -47,22 +48,6 @@ void	philo_eat(t_philo *philo)
 	acc_sleep(philo->info->time_sleep);
 	pthread_mutex_unlock(&(philo->info->fork[philo->left_fork]));
 	pthread_mutex_unlock(&(philo->info->fork[philo->right_fork]));
-}
-
-void divide_sleep(unsigned long ms)
-{
-	unsigned long time_end = get_ms_timestamp() + ms;
-	unsigned long time_left = time_end - get_ms_timestamp();
-	while (time_left / 2 > 10)
-	{
-		usleep((time_left / 2) * 1000);
-		time_left = time_end - get_ms_timestamp();
-	}
-	while (time_left != 0)
-	{
-		usleep(10);
-		time_left = time_end - get_ms_timestamp();
-	}
 }
 
 void	philo_sleep(t_philo *philo)

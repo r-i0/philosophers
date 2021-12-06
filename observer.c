@@ -6,7 +6,7 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 12:11:42 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/01 12:11:43 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/06 11:08:00 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,9 @@ void	*observer(void *philo_ptr)
 	while (1)
 	{
 		if (is_end(info))
+		{
 			break ;
+		}
 		if (is_all_philos_ate(info))
 		{
 			pthread_mutex_lock(&(info->mu_end));
@@ -86,6 +88,7 @@ void	*observer(void *philo_ptr)
 			philo_die(philo);
 			break ;
 		}
+		usleep(500);
 	}
 	return (NULL);
 }

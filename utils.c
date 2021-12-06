@@ -6,7 +6,7 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 12:07:31 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/01 14:18:30 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/06 11:06:11 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,10 @@ int	acc_sleep(unsigned long ms)
 	unsigned long		timestamp;
 
 	timestamp = get_ms_timestamp();
-	usleep(ms * 1000 - 1000);
-	while (timestamp < time_end)
+	while (timestamp <= time_end)
 	{
-		usleep(50);
+		usleep(100);
 		timestamp = get_ms_timestamp();
-		if (timestamp == 0)
-			return (-1);
 	}
 	return (0);
 }

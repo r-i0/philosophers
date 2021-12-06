@@ -6,7 +6,7 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 12:11:48 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/01 14:20:00 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/01 18:28:25 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,15 +54,13 @@ void	*philo_routine(void *philo_ptr)
 {
 	t_info	*info;
 	t_philo	*philo;
-	int one;
 
-	one = 0;
 	philo = philo_ptr;
 	info = philo->info;
 	if (is_one_philo(info))
 		return (one_philo(info, philo));
 	if (philo->nb % 2)
-		usleep(700);
+		usleep(1000);
 	while (1)
 	{
 		pthread_mutex_lock(&(info->mu_end));
@@ -83,8 +81,6 @@ int	start_dining(t_info *info)
 {
 	int		i;
 	t_philo	*p;
-
-  
 
 	p = info->philo;
 	i = 0;
