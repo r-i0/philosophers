@@ -6,7 +6,7 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/06 12:43:47 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/08 09:10:07 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/08 11:37:15 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,6 @@ int	free_info(t_info *info)
 		return (-1);
 	free(info->philo);
 	free(info->mu_fork);
+	free(info->fork);
 	return (0);
 }

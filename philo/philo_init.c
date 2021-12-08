@@ -6,7 +6,7 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 12:12:33 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/08 10:55:29 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/08 11:40:11 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,12 @@ static void	init_philo(t_info *info)
 	{
 		pthread_mutex_init(&info->mu_fork[i], NULL);
 		info->philo[i].nb = i + 1;
-		info->philo[i].right_mu_fork = i;
-		info->philo[i].left_mu_fork = (i + 1) % info->nb_philo;
+		info->philo[i].right_fork = i;
+		info->philo[i].left_fork = (i + 1) % info->nb_philo;
 		info->philo[i].info = info;
 		info->philo[i].time_last_eat = start_time;
 		info->philo[i].cnt_eat = 0;
+		info->fork[i] = false;
 		i++;
 	}
 }
@@ -49,6 +50,13 @@ static int	allocate_info(t_info *info)
 	if (info->mu_fork == NULL)
 	{
 		free(info->philo);
+		return (-1);
+	}
+	info->fork = malloc(sizeof(bool) * (info->nb_philo));
+	if (info->fork == NULL)
+	{
+		free(info->philo);
+		free(info->mu_fork);
 		return (-1);
 	}
 	return (0);

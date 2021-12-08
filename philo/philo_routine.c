@@ -6,7 +6,7 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/06 12:43:43 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/08 11:19:34 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/08 11:43:17 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ static bool	is_one_philo(t_info *info)
 
 static void	*one_philo(t_info *info, t_philo *philo)
 {
-	pthread_mutex_lock(&(info->mu_fork[philo->left_mu_fork]));
+	pthread_mutex_lock(&(info->mu_fork[philo->left_fork]));
 	put_act(philo, "has taken a fork");
-	pthread_mutex_unlock(&(info->mu_fork[philo->left_mu_fork]));
+	pthread_mutex_unlock(&(info->mu_fork[philo->left_fork]));
 	while (1)
 	{
 		pthread_mutex_lock(&(info->mu_end));
