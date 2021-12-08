@@ -6,7 +6,7 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 12:11:36 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/08 10:03:41 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/08 11:18:24 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ int				acc_sleep(unsigned long ms);
 
 // philo_routine.c
 void			*philo_routine(void *philo_ptr);
+
+int	start_dining(t_info *info);
 
 // join_threads.c
 int				join_threads(t_info *info);
