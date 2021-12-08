@@ -1,0 +1,18 @@
+#!bin/bash
+
+GREEN="\033[32m"
+RESET="\033[39m"
+
+do_test () {
+	echo -e ${GREEN}${1}${RESET}
+	eval $1
+	echo ""
+}
+
+do_test './philo 10 400 "" 100'
+do_test './philo 10 400 -100 100'
+do_test './philo a 400 100 100'
+do_test './philo 10 400 100'
+do_test './philo 10 400 100 100 3 3'
+do_test './philo 0 400 100 100'
+do_test './philo 10 400 100 100 -1'
