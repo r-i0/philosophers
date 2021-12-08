@@ -6,7 +6,7 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 12:12:15 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/01 12:12:16 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/08 10:01:55y rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	check_error(long num, const char *str, int negative, int i)
 	return (0);
 }
 
-int	ft_atoi(const char *str, bool *err)
+unsigned int	ft_atoui(const char *str, bool *err)
 {
 	int		i;
 	int		negative;
@@ -44,7 +44,10 @@ int	ft_atoi(const char *str, bool *err)
 	if (str[0] == '\0')
 		*err = true;
 	if (str[i] == '-')
+	{
+		*err = true;
 		negative = -1, i++;
+	}
 	while (str[i] != '\0')
 	{
 		num *= 10;

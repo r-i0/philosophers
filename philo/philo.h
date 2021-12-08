@@ -6,7 +6,7 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 12:11:36 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/06 12:47:37 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/08 10:03:41 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@
 typedef struct s_philo
 {
 	int				nb;
-	int				left_fork;
-	int				right_fork;
+	int				left_mu_fork;
+	int				right_mu_fork;
 	int				cnt_eat;
 	pthread_t		thread;
 	pthread_t		death_thread;
@@ -44,14 +44,15 @@ typedef struct s_info
 	int				time_sleep;
 	int				times_must_eat;
 	bool			end;
-	pthread_mutex_t	*fork;
+	bool			*fork;
+	pthread_mutex_t	*mu_fork;
 	pthread_mutex_t	mu_time;
 	pthread_mutex_t	mu_end;
 	t_philo			*philo;
 }	t_info;
 
 // philo_init.c
-bool			philo_init(char **argv, t_info *info);
+bool			philo_init(int argc, char **argv, t_info *info);
 
 // philo_action.c
 void			philo_eat(t_philo *philo);
@@ -78,7 +79,7 @@ int				join_threads(t_info *info);
 int				free_info(t_info *info);
 
 // libft
-int				ft_atoi(const char *str, bool *err);
+unsigned int	ft_atoui(const char *str, bool *err);
 void			ft_putstr_fd(char *s, int fd);
 void			ft_putnbr_fd(int n, int fd);
 

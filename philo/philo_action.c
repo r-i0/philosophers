@@ -6,7 +6,7 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 12:11:40 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/01 18:17:31 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/08 10:16:05 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,24 +30,24 @@ unsigned long	put_act(t_philo *philo, char *msg)
 
 void	philo_eat(t_philo *philo)
 {
-	pthread_mutex_lock(&(philo->info->fork[philo->left_fork]));
+	pthread_mutex_lock(&(philo->info->mu_fork[philo->left_mu_fork]));
 	put_act(philo, "has taken a fork");
-	pthread_mutex_lock(&(philo->info->fork[philo->right_fork]));
+	pthread_mutex_lock(&(philo->info->mu_fork[philo->right_mu_fork]));
 	put_act(philo, "has taken a fork");
 	pthread_mutex_lock(&(philo->info->mu_time));
 	philo->time_last_eat = put_act(philo, "is eating");
 	if (philo->time_last_eat == 0)
 	{
 		pthread_mutex_unlock(&(philo->info->mu_time));
-		pthread_mutex_unlock(&(philo->info->fork[philo->left_fork]));
-		pthread_mutex_unlock(&(philo->info->fork[philo->right_fork]));
+		pthread_mutex_unlock(&(philo->info->mu_fork[philo->left_mu_fork]));
+		pthread_mutex_unlock(&(philo->info->mu_fork[philo->right_mu_fork]));
 		return ;
 	}
 	philo->cnt_eat++;
 	pthread_mutex_unlock(&(philo->info->mu_time));
 	acc_sleep(philo->info->time_sleep);
-	pthread_mutex_unlock(&(philo->info->fork[philo->left_fork]));
-	pthread_mutex_unlock(&(philo->info->fork[philo->right_fork]));
+	pthread_mutex_unlock(&(philo->info->mu_fork[philo->left_mu_fork]));
+	pthread_mutex_unlock(&(philo->info->mu_fork[philo->right_mu_fork]));
 }
 
 void	philo_sleep(t_philo *philo)

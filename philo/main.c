@@ -6,11 +6,18 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 12:11:48 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/06 12:44:14 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/08 11:08:57 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+// void end(void)__attribute__((destructor));
+
+// void end(void)
+// {
+// 	system("leaks philo");
+// }
 
 int	start_dining(t_info *info)
 {
@@ -30,21 +37,14 @@ int	start_dining(t_info *info)
 	return (0);
 }
 
-// void end(void)__attribute__((destructor));
-
-// void end(void)
-// {
-// 	system("leaks philo");
-// }
-
 int	main(int argc, char **argv)
 {
 	t_info	info;
 
 	if (argc < 5 || argc > 6)
-		return (ft_puterror("invalid argument\n"));
-	if (philo_init(argv, &info))
-		return (ft_puterror("error: init\n"));
+		return (ft_puterror("error: invalid argument\n"));
+	if (philo_init(argc, argv, &info))
+		return (ft_puterror("error: philo_init\n"));
 	if (start_dining(&info) == -1)
 		return (ft_puterror("error: pthread_create\n"));
 	if (join_threads(&info) == -1)
