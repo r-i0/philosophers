@@ -12,7 +12,7 @@ SRCS_NAME =	main.c \
 			observer.c \
 			philo_routine.c \
 			join_threads.c \
-			free_info.c \
+			free_rule.c \
 			utils.c
 
 SRCS = ${addprefix ${SRCS_DIR}, ${SRCS_NAME}}

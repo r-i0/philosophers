@@ -6,52 +6,50 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 12:11:40 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/08 11:42:36 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/09 09:37:18 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-unsigned long	put_act(t_philo *philo, char *msg)
+static void	take_fork(t_philo *philo, int side)
 {
-	unsigned long	timestamp;
-
-	pthread_mutex_lock(&(philo->info->mu_end));
-	if (philo->info->end == true)
+	if (side == RIGHT)
 	{
-		pthread_mutex_unlock(&(philo->info->mu_end));
-		return (0);
+		pthread_mutex_lock(&(philo->rule->mu_fork[philo->right_fork]));
+		philo->rule->fork[philo->right_fork] = true;
+		put_act(philo, "has taken a fork");
 	}
-	timestamp = get_ms_timestamp();
-	printf("%lu %d %s\n", timestamp, philo->nb, msg);
-	pthread_mutex_unlock(&(philo->info->mu_end));
-	return (timestamp);
+	if (side == LEFT)
+	{
+		pthread_mutex_lock(&(philo->rule->mu_fork[philo->left_fork]));
+		philo->rule->fork[philo->left_fork] = true;
+		put_act(philo, "has taken a fork");
+	}
 }
 
 void	philo_eat(t_philo *philo)
 {
-	pthread_mutex_lock(&(philo->info->mu_fork[philo->left_fork]));
-	philo->info->fork[philo->left_fork] = true;
-	put_act(philo, "has taken a fork");
-	pthread_mutex_lock(&(philo->info->mu_fork[philo->right_fork]));
-	philo->info->fork[philo->right_fork] = true;
-	put_act(philo, "has taken a fork");
-	pthread_mutex_lock(&(philo->info->mu_time));
+	take_fork(philo, LEFT);
+	take_fork(philo, RIGHT);
+	pthread_mutex_lock(&(philo->rule->mu_time));
 	philo->time_last_eat = put_act(philo, "is eating");
 	if (philo->time_last_eat == 0)
 	{
-		pthread_mutex_unlock(&(philo->info->mu_time));
-		pthread_mutex_unlock(&(philo->info->mu_fork[philo->left_fork]));
-		pthread_mutex_unlock(&(philo->info->mu_fork[philo->right_fork]));
+		pthread_mutex_unlock(&(philo->rule->mu_time));
+		philo->rule->fork[philo->left_fork] = false;
+		pthread_mutex_unlock(&(philo->rule->mu_fork[philo->left_fork]));
+		philo->rule->fork[philo->right_fork] = false;
+		pthread_mutex_unlock(&(philo->rule->mu_fork[philo->right_fork]));
 		return ;
 	}
 	philo->cnt_eat++;
-	pthread_mutex_unlock(&(philo->info->mu_time));
-	acc_sleep(philo->info->time_sleep);
-	philo->info->fork[philo->left_fork] = false;
-	pthread_mutex_unlock(&(philo->info->mu_fork[philo->left_fork]));
-	philo->info->fork[philo->right_fork] = false;
-	pthread_mutex_unlock(&(philo->info->mu_fork[philo->right_fork]));
+	pthread_mutex_unlock(&(philo->rule->mu_time));
+	acc_sleep(philo->rule->time_sleep);
+	philo->rule->fork[philo->left_fork] = false;
+	pthread_mutex_unlock(&(philo->rule->mu_fork[philo->left_fork]));
+	philo->rule->fork[philo->right_fork] = false;
+	pthread_mutex_unlock(&(philo->rule->mu_fork[philo->right_fork]));
 }
 
 void	philo_sleep(t_philo *philo)
@@ -60,23 +58,23 @@ void	philo_sleep(t_philo *philo)
 
 	if (timestamp != 0)
 	{
-		acc_sleep(philo->info->time_sleep);
+		acc_sleep(philo->rule->time_sleep);
 	}
 }
 
 void	philo_die(t_philo *philo)
 {
-	t_info				*info;
+	t_rule				*rule;
 	const unsigned long	timestamp = get_ms_timestamp();
 
-	info = philo->info;
-	pthread_mutex_lock(&(info->mu_end));
-	if (info->end == false)
+	rule = philo->rule;
+	pthread_mutex_lock(&(rule->mu_end));
+	if (rule->end == false)
 	{
 		printf("%lu %d died\n", timestamp, philo->nb);
-		info->end = true;
+		rule->end = true;
 	}
-	pthread_mutex_unlock(&(info->mu_end));
+	pthread_mutex_unlock(&(rule->mu_end));
 }
 
 void	philo_think(t_philo *philo)

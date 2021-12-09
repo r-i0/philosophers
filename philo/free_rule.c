@@ -6,29 +6,29 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/06 12:43:47 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/08 11:37:15 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/08 23:09:00 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	free_info(t_info *info)
+int	free_rule(t_rule *rule)
 {
 	int	i;
 
 	i = 0;
-	while (i < info->nb_philo)
+	while (i < rule->nb_philo)
 	{
-		if (pthread_mutex_destroy(&(info->mu_fork[i])) != 0)
+		if (pthread_mutex_destroy(&(rule->mu_fork[i])) != 0)
 			return (-1);
 		i++;
 	}
-	if (pthread_mutex_destroy(&(info->mu_time)))
+	if (pthread_mutex_destroy(&(rule->mu_time)))
 		return (-1);
-	if (pthread_mutex_destroy(&(info->mu_end)))
+	if (pthread_mutex_destroy(&(rule->mu_end)))
 		return (-1);
-	free(info->philo);
-	free(info->mu_fork);
-	free(info->fork);
+	free(rule->philo);
+	free(rule->mu_fork);
+	free(rule->fork);
 	return (0);
 }

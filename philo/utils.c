@@ -6,11 +6,27 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 12:07:31 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/06 11:06:11 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/09 09:37:15 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+unsigned long	put_act(t_philo *philo, char *msg)
+{
+	unsigned long	timestamp;
+
+	pthread_mutex_lock(&(philo->rule->mu_end));
+	if (philo->rule->end == true)
+	{
+		pthread_mutex_unlock(&(philo->rule->mu_end));
+		return (0);
+	}
+	timestamp = get_ms_timestamp();
+	printf("%lu %d %s\n", timestamp, philo->nb, msg);
+	pthread_mutex_unlock(&(philo->rule->mu_end));
+	return (timestamp);
+}
 
 unsigned long	get_ms_timestamp(void)
 {
@@ -29,7 +45,7 @@ unsigned long	get_ms_timestamp(void)
 int	ft_puterror(char *msg)
 {
 	ft_putstr_fd(msg, STDERR_FILENO);
-	return (1);
+	return (EXIT_FAILURE);
 }
 
 int	acc_sleep(unsigned long ms)

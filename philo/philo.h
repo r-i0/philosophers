@@ -6,12 +6,14 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 12:11:36 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/08 11:45:52 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/09 09:35:45 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
+# define RIGHT 0
+# define LEFT 1
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -33,10 +35,10 @@ typedef struct s_philo
 	pthread_t		thread;
 	pthread_t		death_thread;
 	unsigned long	time_last_eat;
-	struct s_info	*info;
+	struct s_rule	*rule;
 }	t_philo;
 
-typedef struct s_info
+typedef struct s_rule
 {
 	int				nb_philo;
 	unsigned long	time_die;
@@ -49,10 +51,10 @@ typedef struct s_info
 	pthread_mutex_t	mu_time;
 	pthread_mutex_t	mu_end;
 	t_philo			*philo;
-}	t_info;
+}	t_rule;
 
 // philo_init.c
-bool			philo_init(int argc, char **argv, t_info *info);
+bool			philo_init(int argc, char **argv, t_rule *rule);
 
 // philo_action.c
 void			philo_eat(t_philo *philo);
@@ -73,13 +75,13 @@ int				acc_sleep(unsigned long ms);
 void			*philo_routine(void *philo_ptr);
 
 // start_dining.c
-int				start_dining(t_info *info);
+int				start_dining(t_rule *rule);
 
 // join_threads.c
-int				join_threads(t_info *info);
+int				join_threads(t_rule *rule);
 
-// free_info.c
-int				free_info(t_info *info);
+// free_rule.c
+int				free_rule(t_rule *rule);
 
 // libft
 unsigned int	ft_atoui(const char *str, bool *err);
