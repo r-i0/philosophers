@@ -1,6 +1,7 @@
 NAME = philo
 
-SRCS_DIR = ./
+SRCS_DIR = ./srcs/
+INCLUDES_DIR = ./includes/
 
 SRCS_NAME =	main.c \
 			ft_atoi.c \
@@ -15,18 +16,18 @@ SRCS_NAME =	main.c \
 			free_rule.c \
 			utils.c
 
-SRCS = ${addprefix ${SRCS_DIR}, ${SRCS_NAME}}
+SRCS = $(addprefix $(SRCS_DIR), $(SRCS_NAME))
 
-OBJS = ${SRCS:.c=.o}
+OBJS = $(SRCS:.c=.o)
 
 CC = gcc
 
-CFLAGS = -pthread -Wall -Wextra -Werror
+CFLAGS = -pthread -Wall -Wextra -Werror -I $(INCLUDES_DIR)
 
 all: $(NAME)
 
-$(NAME): ${OBJS}
-	${CC} ${CFLAGS} -o ${NAME} ${OBJS}
+$(NAME): $(OBJS)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 
 clean:
 	$(RM) $(OBJS)
@@ -36,10 +37,14 @@ fclean: clean
 
 re: fclean all
 
-sanitize: $(OBJS)
+test: $(NAME)
+	@bash ./test/error_test.sh
+
+thread: $(OBJS)
 	$(CC) $(CFLAGS) -fsanitize=undefined -fsanitize=thread -g -o $(NAME) $(OBJS)
 
 address: $(OBJS)
 	$(CC) $(CFLAGS) -fsanitize=undefined -fsanitize=address -o $(NAME) $(OBJS)
 
-.phony: all clean fclean re
+
+.phony: all clean fclean re test thread address

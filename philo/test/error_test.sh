@@ -11,7 +11,7 @@ do_test () {
 
 do_test './philo 10 400 "" 100'
 do_test './philo 10 400 -100 100'
-do_test './philo a 400 100 100'
+do_test './philo 10a 400 100 100'
 do_test './philo 10 400 100'
 do_test './philo 10 400 100 100 3 3'
 do_test './philo 0 400 100 100'
