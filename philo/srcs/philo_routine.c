@@ -6,7 +6,7 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/09 09:38:29 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/09 09:38:30 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/10 10:14:26 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,24 +44,22 @@ static void	*one_philo(t_rule *rule, t_philo *philo)
 
 void	*philo_routine(void *philo_ptr)
 {
-	t_rule	*rule;
 	t_philo	*philo;
 
 	philo = philo_ptr;
-	rule = philo->rule;
-	if (is_one_philo(rule))
-		return (one_philo(rule, philo));
+	if (is_one_philo(philo->rule))
+		return (one_philo(philo->rule, philo));
 	if (philo->nb % 2)
 		usleep(1000);
 	while (1)
 	{
-		pthread_mutex_lock(&(rule->mu_end));
-		if (rule->end == true)
+		pthread_mutex_lock(&(philo->rule->mu_end));
+		if (philo->rule->end == true)
 		{
-			pthread_mutex_unlock(&(rule->mu_end));
+			pthread_mutex_unlock(&(philo->rule->mu_end));
 			break ;
 		}
-		pthread_mutex_unlock(&(rule->mu_end));
+		pthread_mutex_unlock(&(philo->rule->mu_end));
 		philo_eat(philo);
 		philo_sleep(philo);
 		philo_think(philo);
