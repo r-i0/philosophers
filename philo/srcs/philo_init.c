@@ -6,7 +6,7 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 12:12:33 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/08 23:36:57 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/10 10:15:28 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,6 @@ static bool	validate_rule(int argc, t_rule *rule, bool err)
 		|| rule->time_eat < 1
 		|| rule->time_sleep < 1
 		|| (argc == 6 && rule->times_must_eat < 1))
-	{
-		return (true);
-	}
-	if (rule->time_eat > 1000
-		|| rule->time_sleep > 1000)
 	{
 		return (true);
 	}
