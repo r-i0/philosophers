@@ -6,7 +6,7 @@
 /*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 12:11:40 by rsudo             #+#    #+#             */
-/*   Updated: 2021/12/09 09:37:18 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/12/10 09:50:30 by rsudo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	philo_eat(t_philo *philo)
 	}
 	philo->cnt_eat++;
 	pthread_mutex_unlock(&(philo->rule->mu_time));
-	acc_sleep(philo->rule->time_sleep);
+	acc_sleep(philo->rule->time_eat);
 	philo->rule->fork[philo->left_fork] = false;
 	pthread_mutex_unlock(&(philo->rule->mu_fork[philo->left_fork]));
 	philo->rule->fork[philo->right_fork] = false;
