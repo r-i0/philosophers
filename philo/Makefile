@@ -8,7 +8,10 @@ SRCS_NAME =	main.c \
 			ft_putstr_fd.c \
 			ft_putnbr_fd.c \
 			philo_init.c \
-			philo_action.c \
+			philo_eat.c \
+			philo_think.c \
+			philo_sleep.c \
+			philo_die.c \
 			start_dining.c \
 			observer.c \
 			philo_routine.c \
